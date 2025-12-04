@@ -1,5 +1,6 @@
 import {Router} from "express";
 import{Product,UpdateProductDTO} from "../interfaces/product";
+import {pool} from "../database/db";
 
 const router = Router();
 
@@ -247,7 +248,12 @@ let products: Product[] = [
 ]
 
 router.get('/', (req, res) => {
-  res.send(products);
+  pool.query('SELECT * FROM products').then(result => {
+    res.json(result.rows);
+  }).catch(error => {
+    console.error('Error executing query',error);
+    res.status(500).json({error: 'Internal server error'});
+  });
 })
 
 router.get('/:id', (req, res) => {
