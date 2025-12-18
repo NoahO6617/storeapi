@@ -43,8 +43,6 @@ router.post('/', (req, res) => {
 });
 
 
-
-
 router.put('/:id', (req, res) => {
   const id = parseInt(req.params.id);
   const productIndex = products.findIndex(product => product.id === id);
