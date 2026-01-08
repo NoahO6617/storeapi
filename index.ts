@@ -1,6 +1,6 @@
 import 'dotenv/config'
 import * as express from "express";
-import productRoutes from "./endpoints/products";
+import productRoutes from "./src/endpoints/products";
 
 const app = express();
 const port = parseInt(process.env.PORT) || 8080;

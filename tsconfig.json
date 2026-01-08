@@ -6,3 +6,20 @@
     "outDir": "dist"
   }
 }
+/*StoreAPI/
+├─ src/
+│  ├─ endpoints/
+│  │  ├─ products.ts
+│  │  └─ users.ts
+│  ├─ services/
+│  │  └─ product.service.ts
+│  ├─ interfaces/
+│  │  ├─ product.ts
+│  │  └─ user.ts
+│  ├─ database/
+│  │  └─ db.ts
+│  ├─ index.ts
+├─ package.json
+├─ tsconfig.json
+└─ README.md
+*/
