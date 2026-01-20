@@ -1,26 +1,71 @@
 import { Router } from "express";
+import axios from "axios";
+import {
+  CreateProductDTO,
+  Product,
+  UpdateProductDTO,
+} from "../interfaces/product";
 
 const router = Router();
-const FAKE_STORE_URL = "https://fakestoreapi.com";
 
+const FAKESTORE_URL = "https://fakestoreapi.com/products";
+
+// GET all
 router.get("/", async (_req, res) => {
-  const response = await fetch(`${FAKE_STORE_URL}/products`);
-  const products = await response.json();
-  res.json(products);
+  try {
+    const response = await axios.get<Product[]>(FAKESTORE_URL);
+    res.json(response.data);
+  } catch {
+    res.status(500).json({ error: "Error fetching products" });
+  }
 });
 
-/* GET producto por id */
+// GET by id
 router.get("/:id", async (req, res) => {
-  const response = await fetch(
-    `${FAKE_STORE_URL}/products/${req.params.id}`
-  );
-
-  if (!response.ok) {
-    return res.status(404).json({ message: "Producto no encontrado" });
+  try {
+    const response = await axios.get<Product>(
+      `${FAKESTORE_URL}/${req.params.id}`
+    );
+    res.json(response.data);
+  } catch {
+    res.status(404).json({ message: "Product not found" });
   }
+});
 
-  const product = await response.json();
-  res.json(product);
+// POST
+router.post("/", async (req, res) => {
+  try {
+    const response = await axios.post<Product>(
+      FAKESTORE_URL,
+      req.body
+    );
+    res.status(201).json(response.data);
+  } catch {
+    res.status(500).json({ error: "Error creating product" });
+  }
+});
+
+// PUT
+router.put("/:id", async (req, res) => {
+  try {
+    const response = await axios.put<Product>(
+      `${FAKESTORE_URL}/${req.params.id}`,
+      req.body
+    );
+    res.json(response.data);
+  } catch {
+    res.status(500).json({ error: "Error updating product" });
+  }
+});
+
+// DELETE
+router.delete("/:id", async (req, res) => {
+  try {
+    await axios.delete(`${FAKESTORE_URL}/${req.params.id}`);
+    res.json({ message: "Product deleted" });
+  } catch {
+    res.status(500).json({ error: "Error deleting product" });
+  }
 });
 
 export default router;
