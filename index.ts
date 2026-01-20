@@ -3,13 +3,13 @@ import * as express from "express";
 import productRoutes from "./src/endpoints/products";
 
 const app = express();
-const port = parseInt(process.env.PORT) || 8080;
+const port = Number(process.env.PORT) || 8080;
 
 app.use(express.json());
 
-app.use('/api/products', productRoutes);
+app.use('/products', productRoutes);
 
-app.get('/', (req, res) => {
+app.get('/', (_req, res) => {
   res.send('API funcionando');
 });
 
