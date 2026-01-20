@@ -1,81 +1,26 @@
 import { Router } from "express";
-import axios from "axios";
-import {
-  CreateProductDTO,
-  Product,
-  UpdateProductDTO,
-} from "../interfaces/product";
 
 const router = Router();
+const FAKE_STORE_URL = "https://fakestoreapi.com";
 
-const FAKESTORE_URL = "https://fakestoreapi.com/products";
-
-// GET 
 router.get("/", async (_req, res) => {
-  try {
-    const response = await axios.get<Product[]>(FAKESTORE_URL);
-    res.json(response.data);
-  } catch (error) {
-    console.error("Error fetching products", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
+  const response = await fetch(`${FAKE_STORE_URL}/products`);
+  const products = await response.json();
+  res.json(products);
 });
 
-// GET 
+/* GET producto por id */
 router.get("/:id", async (req, res) => {
-  try {
-    const response = await axios.get<Product>(
-      `${FAKESTORE_URL}/${req.params.id}`
-    );
-    res.json(response.data);
-  } catch (error) {
-    res.status(404).json({ message: "Product not found" });
+  const response = await fetch(
+    `${FAKE_STORE_URL}/products/${req.params.id}`
+  );
+
+  if (!response.ok) {
+    return res.status(404).json({ message: "Producto no encontrado" });
   }
-});
 
-// POST 
-router.post("/", async (req, res) => {
-  const product: CreateProductDTO = req.body;
-
-  try {
-    const response = await axios.post<Product>(
-      FAKESTORE_URL,
-      product
-    );
-
-    res.status(201).json(response.data);
-  } catch (error) {
-    console.error("Error creating product", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-
-// PUT
-router.put("/:id", async (req, res) => {
-  const product: UpdateProductDTO = req.body;
-
-  try {
-    const response = await axios.put<Product>(
-      `${FAKESTORE_URL}/${req.params.id}`,
-      product
-    );
-
-    res.json(response.data);
-  } catch (error) {
-    console.error("Error updating product", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-
-// DELETE
-router.delete("/:id", async (req, res) => {
-  try {
-    await axios.delete(`${FAKESTORE_URL}/${req.params.id}`);
-    res.json({ message: "Product deleted" });
-  } catch (error) {
-    console.error("Error deleting product", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
+  const product = await response.json();
+  res.json(product);
 });
 
 export default router;
